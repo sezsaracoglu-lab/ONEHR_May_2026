@@ -1,0 +1,850 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ONE HR. End of May check. 22 May 2026.</title>
+<style>
+  :root {
+    --ivory:   #FAF8F4;
+    --paper:   #F4F1EA;
+    --paper2:  #F9F4EC;
+    --ink:     #1A1A1A;
+    --graphite:#3A3A3A;
+    --muted:   #8A857F;
+    --soft:    #B8B2AA;
+    --rule:    #D8D0C8;
+    --header-rule:#E0DAD2;
+    --orange:  #EE7800;
+    --orange-deep: #B85F00;
+    --orange-pale: #FCE4CB;
+    --orange-tint: #FFF5E8;
+    --green:   #1FA053;
+    --green-pill: #2E9E48;
+    --green-tint:  #DCEFE0;
+  }
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0; padding: 0;
+    background: #E2DCD3;
+    font-family: 'Calibri', 'Segoe UI', system-ui, -apple-system, sans-serif;
+    color: var(--ink);
+    overflow: hidden;
+    height: 100vh;
+  }
+  .deck { width: 100vw; height: 100vh; position: relative; overflow: hidden; }
+  .slide {
+    position: absolute; inset: 0;
+    background: var(--ivory);
+    padding: 5vh 4vw;
+    display: flex; flex-direction: column;
+    opacity: 0; pointer-events: none;
+    transition: opacity 0.45s ease;
+  }
+  .slide.is-active { opacity: 1; pointer-events: auto; }
+
+  /* ============ shared editorial elements ============ */
+  .brand-rule { width: 50px; height: 2px; background: var(--orange); margin-bottom: 0.5rem; }
+  .kicker { color: var(--muted); font-weight: 700; letter-spacing: 0.4em; font-size: 0.75rem; }
+  .slide-num { position: absolute; right: 4vw; top: 5vh; color: var(--muted); font-weight: 700; letter-spacing: 0.35em; font-size: 0.75rem; }
+  .headline { font-size: clamp(48px, 7vw, 100px); line-height: 1.0; font-weight: 800; letter-spacing: -0.02em; color: var(--ink); margin: 1.5rem 0 0; }
+  .lede { font-family: Georgia, 'Times New Roman', serif; font-style: italic; font-size: clamp(18px, 1.8vw, 28px); color: var(--graphite); margin-top: 1.2rem; }
+  .hairline { height: 1px; background: var(--rule); }
+
+  /* ============ SLIDE 1 — Title ============ */
+  .s1 .top-meta { position: absolute; right: 4vw; top: 5vh; color: var(--muted); font-weight: 700; letter-spacing: 0.35em; font-size: 0.85rem; }
+  .s1 .hero { font-size: clamp(80px, 13vw, 180px); line-height: 0.95; font-weight: 800; color: var(--ink); letter-spacing: -0.03em; margin-top: 8vh; }
+  .s1 .sub { font-family: Georgia, serif; font-style: italic; font-size: clamp(36px, 5vw, 72px); color: var(--graphite); margin-top: 0.4rem; }
+  .s1 .meta-row { margin-top: 5vh; padding-top: 1.2rem; border-top: 1px solid var(--rule); display: grid; grid-template-columns: auto auto 1fr; gap: 4vw; color: var(--graphite); font-weight: 700; letter-spacing: 0.3em; font-size: 0.8rem; }
+  .s1 .meta-row > :last-child { text-align: right; }
+  .s1 .tagline { position: absolute; bottom: 5vh; left: 4vw; font-family: Georgia, serif; font-style: italic; color: var(--orange-deep); font-weight: 600; font-size: clamp(13px, 1.1vw, 17px); }
+
+  /* ============ SLIDES 2 & 3 — template style ============ */
+  .tpl { padding: 0; }
+  .tpl .header {
+    padding: 3vh 4vw 1.5vh; display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 1rem; align-items: center;
+    border-bottom: 1px solid var(--header-rule);
+  }
+  .tpl .header .crumb {
+    color: var(--graphite); font-size: 0.85rem;
+  }
+  .tpl .header .crumb b { color: var(--ink); }
+  .tpl .header .page { color: var(--muted); font-size: 0.8rem; font-weight: 700; }
+  .tpl .body { padding: 2.5vh 4vw 3vh; flex: 1; display: flex; flex-direction: column; min-height: 0; }
+
+  .tpl .sec-kicker { color: var(--orange); font-weight: 700; letter-spacing: 0.4em; font-size: 0.75rem; margin-bottom: 0.4rem; }
+  .tpl .sec-headline { font-size: clamp(34px, 4.5vw, 56px); font-weight: 800; color: var(--ink); margin: 0; line-height: 1.05; letter-spacing: -0.01em; }
+
+  /* ============ SLIDE 2 — Recap ============ */
+  .s2 .columns { display: grid; grid-template-columns: 1.05fr 1fr; gap: 3vw; margin-top: 3vh; flex: 1; min-height: 0; }
+  .s2 .obj-card {
+    background: var(--paper2); border-left: 4px solid var(--orange);
+    padding: 1.6rem 1.8rem; border-radius: 4px;
+    display: flex; flex-direction: column;
+  }
+  .s2 .obj-label { color: var(--orange); font-weight: 700; letter-spacing: 0.35em; font-size: 0.72rem; margin-bottom: 0.8rem; }
+  .s2 .obj-title { font-size: clamp(18px, 1.7vw, 26px); font-weight: 800; color: var(--ink); line-height: 1.3; }
+  .s2 .obj-sub { color: var(--graphite); font-size: 0.95rem; margin-top: 1.2rem; }
+  .s2 .hrd-section { margin-top: 1.6rem; padding-top: 1.4rem; border-top: 1px solid var(--rule); }
+  .s2 .hrd-label { color: var(--muted); font-weight: 700; letter-spacing: 0.3em; font-size: 0.65rem; margin-bottom: 0.6rem; }
+  .s2 .hrd-line { color: var(--graphite); font-size: 0.95rem; padding: 0.18rem 0; }
+  .s2 .hrd-line b { color: var(--ink); font-weight: 700; }
+
+  .s2 .promise-col { display: flex; flex-direction: column; }
+  .s2 .promise-label { color: var(--orange); font-weight: 700; letter-spacing: 0.35em; font-size: 0.72rem; margin-bottom: 0.8rem; }
+  .s2 .promise {
+    display: grid; grid-template-columns: 50px 1fr 32px;
+    gap: 1rem; align-items: center;
+    background: var(--paper2);
+    border-radius: 6px;
+    padding: 0.7rem 1rem;
+    margin-bottom: 0.55rem;
+  }
+  .s2 .promise:last-child { margin-bottom: 0; }
+  .s2 .promise .icon-bg { width: 42px; height: 42px; border-radius: 8px; background: var(--orange-pale); display: flex; align-items: center; justify-content: center; }
+  .s2 .promise .icon-bg svg { width: 22px; height: 22px; }
+  .s2 .promise .icon-bg svg path,
+  .s2 .promise .icon-bg svg rect,
+  .s2 .promise .icon-bg svg circle,
+  .s2 .promise .icon-bg svg line,
+  .s2 .promise .icon-bg svg polyline { fill: none; stroke: var(--orange); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+  .s2 .promise .icon-bg svg .fill-orange { fill: var(--orange); stroke: var(--orange); }
+  .s2 .promise .t-row .t { font-weight: 700; color: var(--ink); font-size: 0.95rem; }
+  .s2 .promise .t-row .s { color: var(--muted); font-size: 0.85rem; margin-top: 0.1rem; }
+  .s2 .promise .status-circle { width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 1.05rem; font-weight: 700; }
+  .s2 .promise .status-circle.ok { background: var(--green); }
+  .s2 .promise .status-circle.warn { background: var(--orange); }
+
+  .s2 .closing-strip { margin-top: 1.5rem; background: var(--orange-tint); padding: 0.85rem 1.5rem; border-radius: 4px; font-family: Georgia, serif; font-style: italic; font-weight: 700; color: var(--orange-deep); text-align: center; font-size: clamp(14px, 1.2vw, 18px); }
+
+  /* ============ SLIDE 3 — Five weeks ============ */
+  .s3 .four-label { color: var(--orange); font-weight: 700; letter-spacing: 0.35em; font-size: 0.72rem; margin-top: 2vh; margin-bottom: 0.6rem; }
+  .s3 .init-cards { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.2vw; }
+  .s3 .init-card {
+    background: var(--paper2);
+    border-top: 4px solid var(--orange);
+    border-radius: 4px;
+    padding: 1.1rem 1.1rem 1.1rem;
+    display: flex; flex-direction: column;
+  }
+  .s3 .init-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 0.5rem; }
+  .s3 .init-icon { width: 42px; height: 42px; border-radius: 50%; background: var(--orange-pale); display: flex; align-items: center; justify-content: center; }
+  .s3 .init-icon svg { width: 22px; height: 22px; }
+  .s3 .init-icon svg path,
+  .s3 .init-icon svg rect,
+  .s3 .init-icon svg circle,
+  .s3 .init-icon svg line,
+  .s3 .init-icon svg polyline { fill: none; stroke: var(--orange); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+  .s3 .init-icon svg .fill-orange { fill: var(--orange); stroke: var(--orange); }
+  .s3 .pill { padding: 0.28rem 0.65rem; border-radius: 4px; font-size: 0.62rem; font-weight: 800; letter-spacing: 0.18em; color: white; }
+  .s3 .pill.ok    { background: var(--green-pill); }
+  .s3 .pill.work  { background: var(--orange); }
+  .s3 .init-name { font-size: 1.05rem; font-weight: 800; color: var(--ink); margin-top: 1rem; line-height: 1.2; }
+  .s3 .init-owner { color: var(--graphite); font-style: italic; font-size: 0.85rem; margin-top: 0.3rem; padding-bottom: 0.35rem; border-bottom: 1px solid var(--rule); }
+  .s3 .init-notes { color: var(--graphite); font-size: 0.78rem; line-height: 1.55; margin-top: 0.55rem; }
+  .s3 .init-notes div { padding-left: 0.7rem; position: relative; }
+  .s3 .init-notes div:before { content: ""; position: absolute; left: 0; top: 0.45rem; width: 4px; height: 4px; background: var(--orange); }
+
+  .s3 .along-label { color: var(--orange); font-weight: 700; letter-spacing: 0.35em; font-size: 0.72rem; margin-top: 2.3vh; margin-bottom: 0.5rem; }
+  .s3 .along-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.2vw; }
+  .s3 .along-card { background: var(--paper2); border-radius: 4px; padding: 0.85rem 1.1rem; display: grid; grid-template-columns: 36px 1fr; gap: 0.8rem; align-items: center; }
+  .s3 .along-card .chk { width: 30px; height: 30px; border-radius: 50%; background: var(--green); color: white; display: flex; align-items: center; justify-content: center; font-size: 1rem; font-weight: 700; }
+  .s3 .along-card .ttl { font-weight: 800; color: var(--ink); font-size: 0.9rem; }
+  .s3 .along-card .sub { color: var(--muted); font-size: 0.78rem; margin-top: 0.15rem; }
+
+  .s3 .coming { margin-top: auto; padding-top: 1rem; display: flex; gap: 0.6rem; align-items: baseline; font-size: 0.82rem; }
+  .s3 .coming b { color: var(--orange); font-weight: 700; letter-spacing: 0.35em; font-size: 0.72rem; }
+  .s3 .coming span { color: var(--graphite); }
+
+  /* ============ SLIDE 4 — Year to date ============ */
+  .s4 .lede { margin-top: 1.5rem; }
+  .s4 .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2vw; margin-top: 4vh; }
+  .s4 .stat { padding-right: 2vw; border-right: 1px solid var(--rule); }
+  .s4 .stat:last-child { border-right: 0; }
+  .s4 .stat .num-row { display: flex; align-items: flex-start; gap: 0.3rem; }
+  .s4 .stat .num { font-size: clamp(64px, 9vw, 130px); font-weight: 800; line-height: 1.0; color: var(--ink); letter-spacing: -0.04em; }
+  .s4 .stat.hero .num { color: var(--orange); }
+  .s4 .stat .pct { font-size: clamp(20px, 2.5vw, 36px); font-weight: 800; color: var(--ink); margin-top: 0.4rem; }
+  .s4 .stat.hero .pct { color: var(--orange); }
+  .s4 .stat .of { color: var(--muted); font-size: 0.85rem; margin-top: 0.3rem; }
+  .s4 .stat .label { font-weight: 700; color: var(--ink); font-size: 0.95rem; margin-top: 0.8rem; }
+  .s4 .stat .sub { color: var(--graphite); font-size: 0.82rem; margin-top: 0.3rem; line-height: 1.5; }
+  .s4 .punch { margin-top: 3vh; font-family: Georgia, serif; font-style: italic; font-weight: 700; font-size: clamp(15px, 1.4vw, 20px); color: var(--ink); }
+  .s4 .calendar {
+    margin-top: auto; padding-top: 1.5rem;
+    border-top: 1px solid var(--rule);
+    display: grid; grid-template-columns: auto 1fr auto;
+    align-items: center; gap: 2rem;
+  }
+  .s4 .calendar .lbl {
+    color: var(--ink); font-weight: 800;
+    letter-spacing: 0.35em; font-size: 0.8rem;
+  }
+  .s4 .calendar .months { display: flex; gap: 1.5rem; align-items: center; }
+  .s4 .calendar .m { font-weight: 700; letter-spacing: 0.25em; font-size: 0.9rem; }
+  .s4 .calendar .m.now { color: var(--orange); }
+  .s4 .calendar .m.work { color: var(--ink); }
+  .s4 .calendar .m.summer, .s4 .calendar .m.winddown { color: var(--soft); }
+  .s4 .calendar .side {
+    font-family: Georgia, serif; font-style: italic; font-weight: 700;
+    color: var(--ink); font-size: 1rem; text-align: right;
+  }
+
+  /* ============ SLIDE 5 — Three questions in cards ============ */
+  .s5 .s5-h { margin-top: 1.5rem; font-size: clamp(48px, 6.5vw, 88px); }
+  .s5 .s5-h em { font-family: Georgia, serif; font-style: italic; font-weight: 400; color: var(--ink); }
+  .s5 .s5-sub { margin-top: 0.4rem; font-size: clamp(13px, 1.1vw, 17px); color: var(--graphite); }
+  .s5 .s5-sub b { color: var(--orange); font-weight: 700; letter-spacing: 0.18em; }
+
+  .s5 .q-cards {
+    margin-top: 3vh; display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.6vw;
+  }
+  .s5 .q-card {
+    background: var(--paper2); border-radius: 4px;
+    border-top: 4px solid var(--orange);
+    padding: 1.6rem 1.5rem 1.8rem;
+    display: flex; flex-direction: column; gap: 0.8rem;
+    min-height: 22vh;
+  }
+  .s5 .q-card .num {
+    font-size: clamp(28px, 3vw, 42px);
+    font-weight: 800; color: var(--orange); line-height: 1.0;
+  }
+  .s5 .q-card .text {
+    font-size: clamp(17px, 1.6vw, 24px);
+    font-weight: 700; color: var(--ink); line-height: 1.25;
+  }
+  .s5 .q-card .text em {
+    font-family: Georgia, serif; font-style: italic; font-weight: 400;
+  }
+  .s5 .q-card .sub {
+    font-family: Georgia, serif; font-style: italic;
+    color: var(--graphite); font-size: clamp(12px, 1vw, 15px);
+    line-height: 1.45; margin-top: auto;
+  }
+
+  .s5 .how-section { margin-top: 2.5vh; padding-top: 1rem; border-top: 1px solid var(--rule); }
+  .s5 .how-label { color: var(--orange); font-weight: 700; letter-spacing: 0.4em; font-size: 0.7rem; margin-bottom: 0.5rem; }
+  .s5 .how-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2vw; }
+  .s5 .how-cell { padding-right: 2vw; border-right: 1px solid var(--rule); }
+  .s5 .how-cell:last-child { border-right: 0; }
+  .s5 .how-t { font-weight: 800; color: var(--ink); font-size: clamp(14px, 1.2vw, 18px); }
+  .s5 .how-s { color: var(--graphite); font-style: italic; font-family: Georgia, serif; font-size: clamp(11px, 0.9vw, 13px); margin-top: 0.2rem; }
+
+  /* Slide 5 — discussion timer (15 min, with start/reset) */
+  .s5 .s5-timer {
+    margin-top: 1.5vh; padding: 0.8rem 1rem;
+    background: var(--paper2); border-radius: 4px;
+    border-left: 3px solid var(--orange);
+    display: grid; grid-template-columns: auto 1fr auto;
+    gap: 1.2rem; align-items: center;
+  }
+  .s5 .timer-left { display: flex; align-items: center; gap: 0.8rem; }
+  .s5 .clock-label { color: var(--orange); font-weight: 700; letter-spacing: 0.3em; font-size: 0.7rem; }
+  .s5 .clock { font-size: clamp(24px, 2.6vw, 36px); font-weight: 800; color: var(--ink); font-variant-numeric: tabular-nums; }
+  .s5 .duration-set { display: inline-flex; align-items: center; gap: 0.3rem; margin-left: 0.4rem; }
+  .s5 .dur-btn { background: transparent; border: 1px solid var(--rule); color: var(--muted); padding: 0.22rem 0.5rem; border-radius: 3px; font-family: inherit; font-size: 0.74rem; font-weight: 700; cursor: pointer; }
+  .s5 .dur-btn:hover { color: var(--ink); border-color: var(--ink); }
+  .s5 .dur-btn.active { color: white; background: var(--ink); border-color: var(--ink); }
+  .s5 .dur-unit { color: var(--muted); font-size: 0.74rem; margin-left: 0.1rem; }
+  .s5 .timer-controls { display: flex; gap: 0.4rem; }
+  .s5 .timer-btn { background: var(--ink); color: white; border: 0; padding: 0.45rem 0.9rem; border-radius: 2px; font-family: inherit; font-weight: 700; letter-spacing: 0.2em; font-size: 0.7rem; cursor: pointer; }
+  .s5 .timer-btn:hover { background: var(--orange-deep); }
+  .s5 .timer-btn.secondary { background: transparent; color: var(--ink); border: 1px solid var(--ink); }
+  .s5 .timer-btn.secondary:hover { background: var(--ink); color: white; }
+
+  /* ============ SLIDE 6 — Close ============ */
+  .s6 .headline em { font-family: Georgia, serif; font-style: italic; font-weight: 400; color: var(--ink); }
+  .s6 .lede { margin-top: 1rem; }
+
+  .s6 .timers-section { margin-top: 2.5vh; }
+  .s6 .timers-label {
+    color: var(--orange); font-weight: 700;
+    letter-spacing: 0.35em; font-size: 0.7rem;
+    margin-bottom: 0.8rem;
+  }
+  .s6 .timeline-grid {
+    display: grid; grid-template-columns: repeat(5, 1fr);
+    gap: 0.9vw;
+    position: relative;
+  }
+  .s6 .mini-timer {
+    background: var(--paper2); border-radius: 4px;
+    border-top: 3px solid var(--orange);
+    padding: 0.7rem 0.85rem;
+    display: flex; flex-direction: column;
+    gap: 0.35rem;
+    position: relative;
+  }
+  /* Subtle arrow between timeline cards to suggest sequence */
+  .s6 .timeline-grid .mini-timer:not(:last-child)::after {
+    content: "›";
+    position: absolute;
+    right: -0.7vw; top: 50%;
+    transform: translate(50%, -50%);
+    color: var(--soft); font-size: 1.1rem;
+    pointer-events: none;
+  }
+  .s6 .mini-timer.stage { border-top-color: var(--ink); }
+  .s6 .mt-label {
+    color: var(--muted); font-weight: 700;
+    letter-spacing: 0.25em; font-size: 0.58rem;
+  }
+  .s6 .mt-clock {
+    font-size: clamp(18px, 1.8vw, 26px);
+    font-weight: 800; color: var(--ink);
+    font-variant-numeric: tabular-nums;
+    line-height: 1.0;
+  }
+  .s6 .mt-clock.warning { color: var(--orange); }
+  .s6 .mt-clock.done { color: var(--orange-deep); }
+  .s6 .mt-controls { display: flex; gap: 0.3rem; margin-top: 0.15rem; }
+  .s6 .mt-btn {
+    background: var(--ink); color: white; border: 0;
+    padding: 0.3rem 0.55rem; border-radius: 2px;
+    font-family: inherit; font-weight: 700;
+    letter-spacing: 0.12em; font-size: 0.6rem;
+    cursor: pointer; flex: 1;
+  }
+  .s6 .mt-btn:hover { background: var(--orange-deep); }
+  .s6 .mt-btn.mt-reset { background: transparent; color: var(--ink); border: 1px solid var(--ink); }
+  .s6 .mt-btn.mt-reset:hover { background: var(--ink); color: white; }
+
+  .s6 .commitment { margin-top: 2vh; padding-top: 1rem; border-top: 2px solid var(--orange); }
+  .s6 .commitment .ttl { font-size: clamp(17px, 1.6vw, 24px); font-weight: 800; color: var(--ink); }
+  .s6 .commitment .ttl em { font-family: Georgia, serif; font-style: italic; font-weight: 400; }
+  .s6 .commitment form { display: grid; grid-template-columns: 1fr auto; gap: 0.6rem; margin-top: 0.6rem; }
+  .s6 .commitment input { padding: 0.55rem 0.85rem; border: 1px solid var(--rule); border-radius: 2px; background: white; font-family: inherit; font-size: 0.88rem; }
+  .s6 .commitment input:focus { outline: 0; border-color: var(--ink); }
+  .s6 .commitment button { background: var(--ink); color: white; border: 0; border-radius: 2px; padding: 0 1.2rem; font-family: inherit; font-weight: 700; letter-spacing: 0.2em; font-size: 0.7rem; cursor: pointer; }
+  .s6 .commitment button:hover { background: var(--orange-deep); }
+  .s6 .commits { margin-top: 0.45rem; max-height: 6vh; overflow-y: auto; display: flex; flex-direction: column; gap: 0.2rem; }
+  .s6 .commit-item { padding: 0.32rem 0.6rem; border-left: 2px solid var(--orange); background: var(--paper); font-size: 0.78rem; color: var(--ink); display: grid; grid-template-columns: 1fr auto; gap: 0.8rem; align-items: center; }
+  .s6 .commit-item b { color: var(--orange-deep); font-weight: 700; margin-right: 0.4rem; }
+  .s6 .commit-item .x { color: var(--muted); cursor: pointer; padding: 0 0.4rem; }
+  .s6 .tagline { position: absolute; bottom: 1.5vh; left: 4vw; font-family: Georgia, serif; font-style: italic; color: var(--orange-deep); font-weight: 600; font-size: 0.8rem; }
+
+  /* ============ NAV ============ */
+  .nav { position: fixed; bottom: 1.5vh; left: 50%; transform: translateX(-50%); display: flex; gap: 0.5rem; align-items: center; background: rgba(255,255,255,0.95); padding: 0.4rem 1rem; border-radius: 999px; box-shadow: 0 4px 18px rgba(0,0,0,0.08); z-index: 100; }
+  .nav button { background: transparent; border: 0; cursor: pointer; padding: 0.3rem 0.6rem; color: var(--muted); font-family: inherit; font-size: 1rem; }
+  .nav button:hover { color: var(--orange); }
+  .dots { display: flex; gap: 0.4rem; padding: 0 0.5rem; }
+  .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--rule); cursor: pointer; transition: background 0.2s; }
+  .dot.active { background: var(--orange); }
+  .nav .counter { color: var(--muted); font-size: 0.78rem; padding: 0 0.5rem; font-variant-numeric: tabular-nums; }
+  .hint { position: fixed; top: 2vh; right: 2vw; color: var(--muted); font-size: 0.7rem; letter-spacing: 0.1em; z-index: 50; }
+  .hint kbd { background: white; padding: 0.1rem 0.4rem; border-radius: 2px; border: 1px solid var(--rule); font-family: inherit; font-size: 0.65rem; }
+
+  @media print {
+    @page { size: 13.33in 7.5in; margin: 0; }
+    body { background: white; height: auto; overflow: visible; }
+    .deck { height: auto; }
+    .slide { position: relative !important; opacity: 1 !important; page-break-after: always; height: 7.5in; width: 13.33in; }
+    .nav, .hint { display: none; }
+  }
+</style>
+</head>
+<body>
+<div class="hint"><kbd>&larr;</kbd> <kbd>&rarr;</kbd> to navigate</div>
+
+<div class="deck">
+
+  <!-- SLIDE 1 -->
+  <section class="slide s1 is-active" data-slide="1">
+    <div class="top-meta">22 MAY 2026</div>
+    <div class="brand-rule"></div>
+    <div class="kicker">FUTURE READY TALENT PROGRAMME</div>
+    <h1 class="hero">ONE HR.</h1>
+    <div class="sub">End of May check.</div>
+    <div class="meta-row">
+      <div>FRIDAY 22 MAY 2026</div>
+      <div>45 MINUTES</div>
+      <div>FACILITATED BY SEZEN &amp; NESE</div>
+    </div>
+    <div class="tagline">One HR.  One pipeline.  Talent in motion.</div>
+  </section>
+
+  <!-- SLIDE 2 -->
+  <section class="slide s2 tpl" data-slide="2">
+    <div class="header">
+      <div class="crumb"><b>Future Ready Talent Programme</b> &nbsp;|&nbsp; ONE HR &nbsp;&middot;&nbsp; End of May check &nbsp;&middot;&nbsp; 22 May 2026</div>
+      <div class="page">2 / 6</div>
+    </div>
+    <div class="body">
+      <div class="sec-kicker">RECAP</div>
+      <h2 class="sec-headline">Where we left off  |  24 April</h2>
+      <div class="columns">
+        <div class="obj-card">
+          <div class="obj-label">THE OBJECTIVE WE SET</div>
+          <div class="obj-title">Move the 25% mobility target from a number to a shared HRD commitment.</div>
+          <div class="obj-sub">Backed by four owned initiatives and two personal commitments per HRD.</div>
+          <div class="hrd-section">
+            <div class="hrd-label">FOUR ACCOUNTABLE HRDS</div>
+            <div class="hrd-line"><b>Renia &amp; Sylvia</b> &nbsp;&middot;&nbsp; Quarterly Talent Committee</div>
+            <div class="hrd-line"><b>Eszter</b> &nbsp;&middot;&nbsp; Job Swapping</div>
+            <div class="hrd-line"><b>Els</b> &nbsp;&middot;&nbsp; Hiring Manager Campaign</div>
+            <div class="hrd-line"><b>Meliha</b> &nbsp;&middot;&nbsp; Internal Recruitment</div>
+          </div>
+        </div>
+        <div class="promise-col">
+          <div class="promise-label">WHAT WE PROMISED EACH OTHER</div>
+          <div class="promise">
+            <div class="icon-bg"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><polyline points="12,7 12,12 15.5,14"/></svg></div>
+            <div class="t-row"><div class="t">15 minute check ins</div><div class="s">with each accountable HRD</div></div>
+            <div class="status-circle ok">&#10003;</div>
+          </div>
+          <div class="promise">
+            <div class="icon-bg"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="1"/><line x1="3" y1="10" x2="21" y2="10"/><line x1="8" y1="3" x2="8" y2="7"/><line x1="16" y1="3" x2="16" y2="7"/></svg></div>
+            <div class="t-row"><div class="t">End of May meeting</div><div class="s">today</div></div>
+            <div class="status-circle ok">&#10003;</div>
+          </div>
+          <div class="promise">
+            <div class="icon-bg"><svg viewBox="0 0 24 24"><path d="M7 3h8l4 4v14H7z"/><polyline points="14,3 14,8 19,8"/><line x1="10" y1="13" x2="16" y2="13"/><line x1="10" y1="17" x2="16" y2="17"/></svg></div>
+            <div class="t-row"><div class="t">Mobility definition</div><div class="s">agreed and shared</div></div>
+            <div class="status-circle ok">&#10003;</div>
+          </div>
+          <div class="promise">
+            <div class="icon-bg"><svg viewBox="0 0 24 24"><polyline points="4,17 9,12 13,15 20,7"/><polyline points="14,7 20,7 20,13"/></svg></div>
+            <div class="t-row"><div class="t">Workday scoreboard</div><div class="s">monthly insights. in flight.</div></div>
+            <div class="status-circle warn">!</div>
+          </div>
+        </div>
+      </div>
+      <div class="closing-strip">Today is the meeting we promised. The frame is the same. We picked the target. We own it together.</div>
+    </div>
+  </section>
+
+  <!-- SLIDE 3 -->
+  <section class="slide s3 tpl" data-slide="3">
+    <div class="header">
+      <div class="crumb"><b>Future Ready Talent Programme</b> &nbsp;|&nbsp; ONE HR &nbsp;&middot;&nbsp; End of May check &nbsp;&middot;&nbsp; 22 May 2026</div>
+      <div class="page">3 / 6</div>
+    </div>
+    <div class="body">
+      <div class="sec-kicker">PROGRESS</div>
+      <h2 class="sec-headline">What's happened in the last five weeks.</h2>
+
+      <div class="four-label">THE FOUR INITIATIVES</div>
+      <div class="init-cards">
+        <div class="init-card">
+          <div class="init-top">
+            <div class="init-icon"><svg viewBox="0 0 24 24"><circle cx="8" cy="9" r="3"/><circle cx="16" cy="9" r="3"/><path d="M3 19c0-3 2.5-5 5-5s5 2 5 5"/><path d="M13 19c0-3 2-5 4-5s4 2 4 5"/></svg></div>
+            <span class="pill ok">ON TRACK</span>
+          </div>
+          <div class="init-name">Quarterly Talent Committee</div>
+          <div class="init-owner">Renia &amp; Sylvia</div>
+          <div class="init-notes">
+            <div>Design in progress</div>
+            <div>Sign off with Renia &amp; Sylvia. Tue 26 May</div>
+            <div>First session. 25 June (in agenda)</div>
+          </div>
+        </div>
+        <div class="init-card">
+          <div class="init-top">
+            <div class="init-icon"><svg viewBox="0 0 24 24"><polyline points="7,5 3,9 7,13"/><line x1="3" y1="9" x2="17" y2="9"/><polyline points="17,11 21,15 17,19"/><line x1="7" y1="15" x2="21" y2="15"/></svg></div>
+            <span class="pill work">IN FLIGHT</span>
+          </div>
+          <div class="init-name">Job Swapping</div>
+          <div class="init-owner">Eszter</div>
+          <div class="init-notes">
+            <div>First meeting took place</div>
+            <div>Mapping what is available in NN world</div>
+            <div>Mada joined as PO</div>
+          </div>
+        </div>
+        <div class="init-card">
+          <div class="init-top">
+            <div class="init-icon"><svg viewBox="0 0 24 24"><path d="M4 9v6h4l9 5V4l-9 5z"/><path d="M19 8.5c1 1 1 6 0 7"/></svg></div>
+            <span class="pill work">IN FLIGHT</span>
+          </div>
+          <div class="init-name">Hiring Manager Campaign</div>
+          <div class="init-owner">Els</div>
+          <div class="init-notes">
+            <div>First meeting took place</div>
+            <div>Initial conversation on approach started</div>
+            <div>Roll out plan to confirm</div>
+          </div>
+        </div>
+        <div class="init-card">
+          <div class="init-top">
+            <div class="init-icon"><svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.5"/><path d="M2 20c0-3.5 3-6 7-6s7 2.5 7 6"/><line x1="18" y1="6" x2="18" y2="12"/><line x1="15" y1="9" x2="21" y2="9"/></svg></div>
+            <span class="pill work">STARTED</span>
+          </div>
+          <div class="init-name">Internal Recruitment</div>
+          <div class="init-owner">Meliha</div>
+          <div class="init-notes">
+            <div>2 to 3 internal recruits per BU</div>
+            <div>Sessions held with all BUs</div>
+            <div>HRBP session will be held</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="along-label">AND THREE MOVEMENTS ALONGSIDE</div>
+      <div class="along-cards">
+        <div class="along-card">
+          <div class="chk">&#10003;</div>
+          <div><div class="ttl">Mobility definition signed off</div><div class="sub">Shared, including the gigs and promotion rule</div></div>
+        </div>
+        <div class="along-card">
+          <div class="chk">&#10003;</div>
+          <div><div class="ttl">Product sponsor sessions started</div><div class="sub">All product sponsors engaged. Cadence set.</div></div>
+        </div>
+        <div class="along-card">
+          <div class="chk">&#10003;</div>
+          <div><div class="ttl">75 in 25 recruitment underway</div><div class="sub">Mada joined. Will own two products.</div></div>
+        </div>
+      </div>
+
+      <div class="coming">
+        <b>COMING UP</b>
+        <span>ATRs &nbsp;&middot;&nbsp; Talent Calibration &nbsp;&middot;&nbsp; Talent Marketplace</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- SLIDE 4 -->
+  <section class="slide s4" data-slide="4">
+    <div class="slide-num">04 / 06</div>
+    <div class="brand-rule"></div>
+    <div class="kicker">THE PICTURE &nbsp;&middot;&nbsp; YEAR TO DATE</div>
+    <h1 class="headline">Year to date.</h1>
+    <div class="lede">Three numbers. Against targets we set with our names on them.</div>
+    <div class="stats">
+      <div class="stat">
+        <div class="num-row"><span class="num">7</span><span class="pct">%</span><div><div class="of">of 25%</div></div></div>
+        <div class="label">Mobility</div>
+        <div class="sub">About six colleagues mobilised so far that we know of.</div>
+      </div>
+      <div class="stat hero">
+        <div class="num-row"><span class="num">70</span><span class="pct">%</span><div><div class="of">of 95%</div></div></div>
+        <div class="label">PDPs in place</div>
+        <div class="sub">Of identified Future Ready talents.</div>
+      </div>
+      <div class="stat">
+        <div class="num-row"><span class="num">42</span><span class="pct">%</span><div><div class="of">of 50%</div></div></div>
+        <div class="label">Gender diversity (F)</div>
+        <div class="sub">Identified FR talents. 42 female, 58 male.</div>
+      </div>
+    </div>
+    <div class="punch">Frameworks are built. Movements to be activated. That lives with us.</div>
+    <div class="calendar">
+      <div class="lbl">WHAT'S LEFT</div>
+      <div class="months">
+        <span class="m now">MAY</span><span class="m work">JUN</span><span class="m summer">JUL</span><span class="m summer">AUG</span><span class="m work">SEP</span><span class="m work">OCT</span><span class="m work">NOV</span><span class="m winddown">DEC</span>
+      </div>
+      <div class="side">~4 working months</div>
+    </div>
+  </section>
+
+  <!-- SLIDE 5 -->
+  <section class="slide s5" data-slide="5">
+    <div class="slide-num">05 / 06</div>
+    <div class="brand-rule"></div>
+    <div class="kicker">OVER TO YOU</div>
+    <h1 class="headline s5-h">Where are we <em>now</em>?</h1>
+    <div class="s5-sub"><b>15 minutes</b> &nbsp;&middot;&nbsp; three rooms &nbsp;&middot;&nbsp; three questions</div>
+
+    <div class="q-cards">
+      <div class="q-card">
+        <div class="num">01</div>
+        <div class="text">Where are we <em>now</em>?</div>
+        <div class="sub">What is moving. What is stuck.</div>
+      </div>
+      <div class="q-card">
+        <div class="num">02</div>
+        <div class="text">Is 25% <em>real</em> by year-end?</div>
+        <div class="sub">Four honest working months. What must be true.</div>
+      </div>
+      <div class="q-card">
+        <div class="num">03</div>
+        <div class="text">How are we as <em>ONE HR</em>?</div>
+        <div class="sub">Stop. Start. Swap.</div>
+      </div>
+    </div>
+
+    <div class="how-section">
+      <div class="how-label">HOW WE'LL WORK</div>
+      <div class="how-grid">
+        <div class="how-cell">
+          <div class="how-t">3 rooms</div>
+          <div class="how-s">Mixed across BUs</div>
+        </div>
+        <div class="how-cell">
+          <div class="how-t">1 scribe / room</div>
+          <div class="how-s">2 insights + 1 commitment per HRD</div>
+        </div>
+        <div class="how-cell">
+          <div class="how-t">15 minutes</div>
+          <div class="how-s">Back at the top for harvest</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="s5-timer">
+      <div class="timer-left">
+        <span class="clock-label">DISCUSSION TIMER</span>
+        <span class="clock" id="clock5">15:00</span>
+        <span class="duration-set">
+          <button class="dur-btn" data-min="10">10</button>
+          <button class="dur-btn active" data-min="15">15</button>
+          <button class="dur-btn" data-min="20">20</button>
+          <span class="dur-unit">min</span>
+        </span>
+      </div>
+      <div></div>
+      <div class="timer-controls">
+        <button class="timer-btn" id="timerStart5">START</button>
+        <button class="timer-btn secondary" id="timerReset5">RESET</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- SLIDE 6 -->
+  <section class="slide s6" data-slide="6">
+    <div class="slide-num">06 / 06</div>
+    <div class="brand-rule"></div>
+    <div class="kicker">CLOSE</div>
+    <h1 class="headline">What we <em>leave</em> with.</h1>
+
+    <div class="timers-section">
+      <div class="timers-label">THE FLOW &nbsp;·&nbsp; left to right</div>
+      <div class="timeline-grid">
+        <div class="mini-timer" data-mini="r1" data-seconds="90">
+          <div class="mt-label">ROOM 01</div>
+          <div class="mt-clock">01:30</div>
+          <div class="mt-controls">
+            <button class="mt-btn mt-start">START</button>
+            <button class="mt-btn mt-reset">RESET</button>
+          </div>
+        </div>
+        <div class="mini-timer" data-mini="r2" data-seconds="90">
+          <div class="mt-label">ROOM 02</div>
+          <div class="mt-clock">01:30</div>
+          <div class="mt-controls">
+            <button class="mt-btn mt-start">START</button>
+            <button class="mt-btn mt-reset">RESET</button>
+          </div>
+        </div>
+        <div class="mini-timer" data-mini="r3" data-seconds="90">
+          <div class="mt-label">ROOM 03</div>
+          <div class="mt-clock">01:30</div>
+          <div class="mt-controls">
+            <button class="mt-btn mt-start">START</button>
+            <button class="mt-btn mt-reset">RESET</button>
+          </div>
+        </div>
+        <div class="mini-timer stage" data-mini="s2" data-seconds="180">
+          <div class="mt-label">COMMITMENTS</div>
+          <div class="mt-clock">03:00</div>
+          <div class="mt-controls">
+            <button class="mt-btn mt-start">START</button>
+            <button class="mt-btn mt-reset">RESET</button>
+          </div>
+        </div>
+        <div class="mini-timer stage" data-mini="s3" data-seconds="30">
+          <div class="mt-label">CLOSE</div>
+          <div class="mt-clock">00:30</div>
+          <div class="mt-controls">
+            <button class="mt-btn mt-start">START</button>
+            <button class="mt-btn mt-reset">RESET</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="commitment">
+      <div class="ttl">In chat. Your <em>one move</em> this week.</div>
+      <form id="commitForm" onsubmit="return false;">
+        <input id="commitInput" type="text" placeholder="Name . one move . day" autocomplete="off">
+        <button id="commitBtn" type="submit">ADD</button>
+      </form>
+      <div class="commits" id="commitList"></div>
+    </div>
+    <div class="tagline">One HR.  One pipeline.  Talent in motion.</div>
+  </section>
+
+</div>
+
+<div class="nav">
+  <button id="prev" aria-label="Previous">&#9664;</button>
+  <div class="dots" id="dots"></div>
+  <span class="counter" id="counter">1 / 6</span>
+  <button id="next" aria-label="Next">&#9654;</button>
+</div>
+
+<script>
+  const slides = Array.from(document.querySelectorAll(".slide"));
+  const dotsHost = document.getElementById("dots");
+  const counter  = document.getElementById("counter");
+  let i = 0;
+
+  slides.forEach((_, idx) => {
+    const d = document.createElement("span");
+    d.className = "dot" + (idx === 0 ? " active" : "");
+    d.addEventListener("click", () => go(idx));
+    dotsHost.appendChild(d);
+  });
+  const dots = Array.from(dotsHost.children);
+
+  function go(n) {
+    if (n < 0 || n >= slides.length) return;
+    slides[i].classList.remove("is-active");
+    dots[i].classList.remove("active");
+    i = n;
+    slides[i].classList.add("is-active");
+    dots[i].classList.add("active");
+    counter.textContent = (i + 1) + " / " + slides.length;
+  }
+
+  document.getElementById("prev").onclick = () => go(i - 1);
+  document.getElementById("next").onclick = () => go(i + 1);
+  document.addEventListener("keydown", e => {
+    if (e.key === "ArrowLeft" || e.key === "PageUp") go(i - 1);
+    else if (e.key === "ArrowRight" || e.key === "PageDown" || e.key === " ") { e.preventDefault(); go(i + 1); }
+    else if (e.key === "Home") go(0);
+    else if (e.key === "End") go(slides.length - 1);
+  });
+
+  // ============ Timers ============
+  // Reusable timer factory — wires a clock display, start/reset buttons, duration picker
+  function makeTimer({ clockId, startId, resetId, durSelector, initialMinutes }) {
+    const clockEl  = document.getElementById(clockId);
+    const startBtn = document.getElementById(startId);
+    const resetBtn = document.getElementById(resetId);
+    const durBtns  = document.querySelectorAll(durSelector);
+
+    let durationMinutes = initialMinutes;
+    let remaining = durationMinutes * 60;
+    let handle = null;
+
+    function render() {
+      const m = Math.floor(Math.max(0, remaining) / 60);
+      const s = Math.max(0, remaining) % 60;
+      clockEl.textContent = String(m).padStart(2,"0") + ":" + String(s).padStart(2,"0");
+      clockEl.style.color = (remaining <= 60 && remaining > 0) ? "var(--orange)"
+                          : (remaining === 0) ? "var(--orange-deep)"
+                          : "var(--ink)";
+    }
+    render();
+
+    startBtn.onclick = () => {
+      if (handle) {
+        clearInterval(handle); handle = null;
+        startBtn.textContent = "RESUME";
+      } else {
+        if (remaining === 0) { remaining = durationMinutes * 60; }
+        handle = setInterval(() => {
+          remaining = Math.max(0, remaining - 1);
+          render();
+          if (remaining === 0) { clearInterval(handle); handle = null; startBtn.textContent = "START"; }
+        }, 1000);
+        startBtn.textContent = "PAUSE";
+      }
+    };
+    resetBtn.onclick = () => {
+      if (handle) { clearInterval(handle); handle = null; }
+      remaining = durationMinutes * 60;
+      startBtn.textContent = "START";
+      render();
+    };
+    durBtns.forEach(b => {
+      b.onclick = () => {
+        if (handle) { clearInterval(handle); handle = null; startBtn.textContent = "START"; }
+        durBtns.forEach(x => x.classList.remove("active"));
+        b.classList.add("active");
+        durationMinutes = parseInt(b.dataset.min, 10);
+        remaining = durationMinutes * 60;
+        render();
+      };
+    });
+  }
+
+  // Slide 5 — discussion timer (10 / 15 / 20 min, default 15)
+  makeTimer({
+    clockId: "clock5",
+    startId: "timerStart5",
+    resetId: "timerReset5",
+    durSelector: ".s5 .dur-btn",
+    initialMinutes: 15
+  });
+
+  // Slide 6 — six independent mini-timers (3 rooms × 90s + 3 stages)
+  document.querySelectorAll(".s6 .mini-timer").forEach(card => {
+    const total   = parseInt(card.dataset.seconds, 10);
+    const clockEl = card.querySelector(".mt-clock");
+    const startBtn= card.querySelector(".mt-start");
+    const resetBtn= card.querySelector(".mt-reset");
+    let remaining = total;
+    let handle    = null;
+
+    function fmt(sec) {
+      const m = Math.floor(Math.max(0, sec) / 60);
+      const s = Math.max(0, sec) % 60;
+      return String(m).padStart(2,"0") + ":" + String(s).padStart(2,"0");
+    }
+    function render() {
+      clockEl.textContent = fmt(remaining);
+      clockEl.classList.remove("warning", "done");
+      if (remaining === 0) clockEl.classList.add("done");
+      else if (remaining <= 15) clockEl.classList.add("warning");
+    }
+    render();
+
+    startBtn.onclick = () => {
+      if (handle) {
+        clearInterval(handle); handle = null;
+        startBtn.textContent = "RESUME";
+      } else {
+        if (remaining === 0) remaining = total;
+        handle = setInterval(() => {
+          remaining = Math.max(0, remaining - 1);
+          render();
+          if (remaining === 0) { clearInterval(handle); handle = null; startBtn.textContent = "START"; }
+        }, 1000);
+        startBtn.textContent = "PAUSE";
+      }
+    };
+    resetBtn.onclick = () => {
+      if (handle) { clearInterval(handle); handle = null; }
+      remaining = total;
+      startBtn.textContent = "START";
+      render();
+    };
+  });
+
+  // ============ Commitments ============
+  const STORAGE_KEY = "one_hr_commits_v9_22may2026";
+  const input = document.getElementById("commitInput");
+  const list  = document.getElementById("commitList");
+  const btn   = document.getElementById("commitBtn");
+
+  function loadCommits() { try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || []; } catch { return []; } }
+  function saveCommits(arr) { localStorage.setItem(STORAGE_KEY, JSON.stringify(arr)); }
+  function renderCommits() {
+    const items = loadCommits();
+    list.innerHTML = "";
+    items.forEach((c, idx) => {
+      const div = document.createElement("div");
+      div.className = "commit-item";
+      div.innerHTML = "<span><b>" + (idx+1) + "</b>" + escapeHtml(c) + "</span><span class=\"x\" title=\"Remove\">&times;</span>";
+      div.querySelector(".x").onclick = () => {
+        const arr = loadCommits(); arr.splice(idx, 1); saveCommits(arr); renderCommits();
+      };
+      list.appendChild(div);
+    });
+  }
+  function escapeHtml(s) { return s.replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c])); }
+  btn.onclick = () => {
+    const v = input.value.trim(); if (!v) return;
+    const arr = loadCommits(); arr.push(v); saveCommits(arr); input.value = ""; renderCommits();
+  };
+  input.addEventListener("keydown", e => { if (e.key === "Enter") { e.preventDefault(); btn.click(); } });
+  renderCommits();
+</script>
+</body>
+</html>
